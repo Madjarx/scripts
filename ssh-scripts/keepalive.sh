@@ -23,24 +23,25 @@ do
   esac
 done
 
+
 # Check if the config file exists in the .ssh directory
-if [ -f $HOME/.ssh/config ]; then
-  # If the config file exists, echo that it is found
-  echo "Config file found"
+if [ -f ~/.ssh/config ]; then
+  # If the config file exists, modify it to send an opt null package from the client side to the remote ssh server every 60 seconds
+  sed -i '/ServerAliveInterval/d' ~/.ssh/config
+  echo "Host *" >> ~/.ssh/config
+  echo "  KeepAlive yes" >> ~/.ssh/config
+  echo "  ServerAliveInterval $interval" >> ~/.ssh/config
 else
   # If the config file does not exist, echo that it is not found
-  echo "Config file not found. Creating one for you!"
+  echo "config file not found"
   # Create the config file
   touch ~/.ssh/config
   # Change the permissions of the config file to 600
   chmod 600 ~/.ssh/config
-  
-  echo "Config file created"
+  # Edit the config file to send an opt null package from the client side to the remote ssh server every 60 seconds
+  echo "Host *" >> ~/.ssh/config
+  echo "  KeepAlive yes" >> ~/.ssh/config
+  echo "  ServerAliveInterval $interval" >> ~/.ssh/config
 fi
 
-# Edit the config file to send an opt null package from the client side to the remote ssh server every 60 seconds
-echo "Setting the interval to $interval"
-echo "Host *" >> ~/.ssh/config
-echo "  KeepAlive yes" >> ~/.ssh/config
-echo "  ServerAliveInterval $interval" >> ~/.ssh/config
 echo "Done!"
